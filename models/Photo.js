@@ -12,13 +12,10 @@ const PhotoSchema = new mongoose.Schema(
     },
     comments: [
       {
-        commentId: {
+        username: {
           type: String,
         },
-        userId: {
-          type: String,
-        },
-        desc: {
+        comment: {
           type: String,
         },
       },

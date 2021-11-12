@@ -17,6 +17,22 @@ router.post("/upload", verifyTokenAndIsAdmin, async (req, res) => {
   }
 });
 
+//Add comment
+router.put("/addcomment/:id", async (req, res) => {
+  try {
+    const updatedPhoto = await Photo.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: { comments: req.body },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedPhoto);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.get("/all", async (req, res) => {
   try {
     const photos = await Photo.find().sort({ createdAt: -1 });
