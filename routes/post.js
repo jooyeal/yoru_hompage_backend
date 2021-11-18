@@ -43,4 +43,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//add comment
+router.put("/addcomment/:id", async (req, res) => {
+  try {
+    const updatedPhoto = await Post.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: { comments: req.body },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedPhoto);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
