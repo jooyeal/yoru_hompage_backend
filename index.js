@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoute = require("./routes/auth");
 const photoRoute = require("./routes/photo");
+const postRoute = require("./routes/post");
 const app = express();
 
 dotenv.config();
@@ -18,4 +19,5 @@ app.use(express.json({ extended: true, limit: "30mb" }));
 
 app.use("/api/auth", authRoute);
 app.use("/api/photo", photoRoute);
+app.use("/api/post", postRoute);
 app.listen(process.env.PORT || 8000, () => console.log("server listening"));
