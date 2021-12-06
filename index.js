@@ -9,32 +9,6 @@ const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 const app = express();
 
-dotenv.config();
-
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => console.log("DB connection success"))
-  .catch((err) => console.log(err));
-
-app.use(cors());
-app.use(express.json({ extended: true, limit: "30mb" }));
-
-app.use("/api/auth", authRoute);
-app.use("/api/photo", photoRoute);
-app.use("/api/post", postRoute);
-app.use("/api/conversation", conversationRoute);
-app.use("/api/message", messageRoute);
-
-// app.use(express.static(path.join(__dirname, "/yoru_hompage_client/build")));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(
-//     path.join(__dirname, "/yoru_hompage_client/build", "index.html")
-//   );
-// });
-
-app.listen(process.env.PORT || 8000, () => console.log("server listening"));
-
 const io = require("socket.io")(app, {
   cors: {
     origin: "*",
@@ -82,3 +56,29 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 });
+
+dotenv.config();
+
+mongoose
+  .connect(process.env.MONGO_URL)
+  .then(() => console.log("DB connection success"))
+  .catch((err) => console.log(err));
+
+app.use(cors());
+app.use(express.json({ extended: true, limit: "30mb" }));
+
+app.use("/api/auth", authRoute);
+app.use("/api/photo", photoRoute);
+app.use("/api/post", postRoute);
+app.use("/api/conversation", conversationRoute);
+app.use("/api/message", messageRoute);
+
+// app.use(express.static(path.join(__dirname, "/yoru_hompage_client/build")));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(
+//     path.join(__dirname, "/yoru_hompage_client/build", "index.html")
+//   );
+// });
+
+app.listen(process.env.PORT || 8000, () => console.log("server listening"));
