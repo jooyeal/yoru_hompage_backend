@@ -8,7 +8,55 @@ const postRoute = require("./routes/post");
 const conversationRoute = require("./routes/conversation");
 const messageRoute = require("./routes/message");
 const app = express();
+const server = require('http').Server(app)
 
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+let users = [];
+
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+
+io.on("connection", (socket) => {
+  //connect
+  console.log("a user connected");
+  socket.on("addUser", (userId) => {
+    addUser(userId, socket.id);
+    io.emit("getUsers", users);
+  });
+
+  //send and get messages
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    const user = getUser(receiverId);
+    console.log(user);
+    user &&
+      io.to(user.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+  });
+
+  //disconnect
+  socket.on("disconnect", () => {
+    console.log("a user disconnected");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
+  });
+});
 
 dotenv.config();
 
@@ -34,4 +82,4 @@ app.use("/api/message", messageRoute);
 //   );
 // });
 
-app.listen(process.env.PORT || 8000, () => console.log("server listening"));
+server.listen(process.env.PORT || 8000, () => console.log("server listening"));
