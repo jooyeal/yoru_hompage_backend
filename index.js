@@ -25,4 +25,12 @@ app.use("/api/post", postRoute);
 app.use("/api/conversation", conversationRoute);
 app.use("/api/message", messageRoute);
 
+app.use(express.static(path.join(__dirname, "/yoru_hompage_client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "/yoru_hompage_client/build", "index.html")
+  );
+});
+
 app.listen(process.env.PORT || 8000, () => console.log("server listening"));
