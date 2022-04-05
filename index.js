@@ -12,7 +12,7 @@ const server = require("http").Server(app);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: "https://sharp-mcnulty-6b5c5f.netlify.app",
+    origin: "https://yoruchadesu.netlify.app",
   },
 });
 
